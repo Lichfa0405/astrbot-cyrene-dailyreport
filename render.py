@@ -17,9 +17,10 @@ except ImportError:
 
 async def render_report(data: dict[str, Any]) -> bytes:
     """把 data 渲染成 PNG 字节"""
+    logger.error("[xilian] ===== render_report v2 被执行 =====")
     viewport = {"width": 578, "height": 1885}
 
-    if _HAS_ASTRBOT_T2I:
+    if False:  # 强制走 playwright
         try:
             return await _astrbot_html_to_pic(
                 template_path=str(TEMPLATE_DIR),
@@ -36,7 +37,6 @@ async def render_report(data: dict[str, Any]) -> bytes:
 
     return await _render_with_playwright(data, viewport)
 
-
 async def _render_with_playwright(data: dict, viewport: dict) -> bytes:
     from jinja2 import Environment, FileSystemLoader, select_autoescape
     from playwright.async_api import async_playwright
@@ -47,14 +47,23 @@ async def _render_with_playwright(data: dict, viewport: dict) -> bytes:
     )
     html = env.get_template("main.html").render(data=data)
 
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(args=["--no-sandbox"])
-        page = await browser.new_page(
-            viewport={"width": viewport["width"], "height": viewport["height"]}
-        )
-        # base url 让相对路径的字体、图标能加载
-        await page.set_content(html, wait_until="networkidle")
-        await page.wait_for_timeout(2000)
-        img = await page.screenshot(full_page=True)
-        await browser.close()
-        return img
+    # 把渲染后的 HTML 写到模板目录，用 file:// 加载，相对路径才能命中
+    tmp_html = TEMPLATE_DIR / "_render_tmp.html"
+    tmp_html.write_text(html, encoding="utf-8")
+
+    try:
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(channel="chromium", args=["--no-sandbox"])
+            page = await browser.new_page(
+                viewport={"width": viewport["width"], "height": viewport["height"]}
+            )
+            await page.goto(f"file://{tmp_html}", wait_until="networkidle")
+            await page.wait_for_timeout(2000)
+            # 只截 .wrapper 元素，自动按内容高度
+            element = await page.query_selector(".wrapper")
+            img = await element.screenshot()
+            await browser.close()
+            return img
+    finally:
+        tmp_html.unlink(missing_ok=True)
+

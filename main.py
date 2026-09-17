@@ -174,8 +174,9 @@ class XilianReportPlugin(Star):
     async def cmd_report(self, event: AstrMessageEvent):
         """查看今日昔涟日报"""
         try:
-            image = await self._get_report_image()
-            yield event.image_result(image)
+            await self._get_report_image(force_refresh=True)   # 每次强制重新渲染
+            cache_file = CACHE_DIR / f"{datetime.now().date()}.png"
+            yield event.image_result(str(cache_file))
         except Exception as e:
             logger.exception("[xilian] 生成日报失败")
             yield event.plain_result(f"日报生成失败: {e}")
