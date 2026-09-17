@@ -1,0 +1,6 @@
+name: astrbot_plugin_xilian_report
+display_name: 昔涟日报
+desc: 聚合 B站热点 / IT资讯 / 节日倒计时 / 一言，生成日报图片
+version: 1.0.0
+author: 你的名字
+repo: https://github.com/你的用户名/astrbot_plugin_xilian_report

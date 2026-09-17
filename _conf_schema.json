@@ -1,0 +1,88 @@
+{
+  "report_title": {
+    "description": "日报标题",
+    "type": "string",
+    "default": "昔涟日报"
+  },
+  "report_subtitle": {
+    "description": "日报副标题",
+    "type": "string",
+    "default": "把今天的好消息，轻轻装进信箱。"
+  },
+  "auto_send": {
+    "description": "每日 8:01 自动推送",
+    "type": "bool",
+    "default": true
+  },
+  "notify_group_id": {
+    "description": "推送结果通知群号（留空不通知）",
+    "type": "int",
+    "default": 0
+  },
+  "notify_superuser": {
+    "description": "推送结果私聊管理员",
+    "type": "bool",
+    "default": true
+  },
+  "self_check_hour": {
+    "description": "每日自检小时（0-23）",
+    "type": "int",
+    "default": 7
+  },
+  "self_check_minute": {
+    "description": "每日自检分钟（0-59）",
+    "type": "int",
+    "default": 45
+  },
+  "full_show": {
+    "description": "是否完整显示长文本（关闭则单行截断）",
+    "type": "bool",
+    "default": false
+  },
+  "alapi_token": {
+    "description": "ALAPI Token（用于 60s 板块，可选）",
+    "type": "string",
+    "default": ""
+  },
+
+  "block_festival_enabled": {
+    "description": "开启 节日倒计时",
+    "type": "bool",
+    "default": true
+  },
+  "block_bili_hot_enabled": {
+    "description": "开启 B站热点",
+    "type": "bool",
+    "default": true
+  },
+  "block_bili_hot_cookie": {
+    "description": "B站 Cookie（可选）",
+    "type": "string",
+    "default": ""
+  },
+  "block_it_news_enabled": {
+    "description": "开启 IT资讯",
+    "type": "bool",
+    "default": true
+  },
+  "block_it_news_cookie": {
+    "description": "IT资讯 Cookie（可选）",
+    "type": "string",
+    "default": ""
+  },
+  "block_six_news_enabled": {
+    "description": "开启 60S读世界",
+    "type": "bool",
+    "default": false
+  },
+  "block_six_news_cookie": {
+    "description": "60S Cookie（可选）",
+    "type": "string",
+    "default": ""
+  },
+  "block_hitokoto_enabled": {
+    "description": "开启 今日一言",
+    "type": "bool",
+    "default": true
+  }
+}
