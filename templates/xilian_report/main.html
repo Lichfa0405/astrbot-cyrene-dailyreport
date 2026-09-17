@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>昔涟日报</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+<div class="wrapper">
+    <div class="main">
+        <!-- ========= 顶部：立绘 + 标题 + 日期卡 ========= -->
+        <div class="top-border">
+            <div class="ww-img">
+                <img src="./res/image/xilian.png" alt="昔涟" class="ww-img">
+            </div>
+            <div class="top-title">
+                <p class="ww-title">{{ data.title }}</p>
+                <p class="ww-tip">{{ data.subtitle }}</p>
+            </div>
+            <div class="top-date">
+                <p class="top-date-week">{{ data.week }}</p>
+                <p class="top-date-date">{{ data.date }}</p>
+                <p class="top-date-cn">{{ data.zh_date }}</p>
+            </div>
+        </div>
+
+        <!-- ========= 半宽行：节日倒计时 + B站热点 ========= -->
+        {% set half_blocks = data.blocks | selectattr("layout", "equalto", "half") | list %}
+        {% if half_blocks %}
+        <div class="one-border">
+            {% for block in half_blocks %}
+                {% if block.id == "festival" %}
+                <div class="moyu-border">
+                    <div class="moyu-title">
+                        <img src="{{ block.icon }}" class="title-img">{{ block.title }}
+                    </div>
+                    {% for item in block['items'] %}
+                    <p class="moyu-inner">距离<span class="moyu-day-name">{{ item.name }}</span>还剩<span class="moyu-day">{{ item.days }}</span>天</p>
+                    {% endfor %}
+                </div>
+                {% elif block.id == "bili_hot" %}
+                <div class="bili-border">
+                    <div class="moyu-title" style="left: 128px;">
+                        <img src="{{ block.icon }}" class="title-img">{{ block.title }}
+                    </div>
+                    {% for s in block['items'] %}
+                    <p class="bili-text"><span class="hot-text">热</span>{{ s }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- ========= 全宽块：按 order 顺序渲染 ========= -->
+        {% for block in data.blocks if block.layout == "full" %}
+            {% if block.id == "it_news" or block.id == "six_news" %}
+            <div class="three-border">
+                <div class="moyu-title" style="left: -3px;">
+                    <img src="{{ block.icon }}" class="title-img">{{ block.title }}
+                </div>
+                <ul style="line-height: 25px; margin-left: -25px;">
+                    {% for s in block['items'] %}
+                        {% if data.full_show %}
+                        <li class="full-show-text">{{ s }}</li>
+                        {% else %}
+                        <li class="normal-text">{{ s }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% elif block.id == "hitokoto" %}
+            <div class="five-border">
+                <div class="moyu-title" style="left: -3px;">
+                    <img src="{{ block.icon }}" class="title-img">{{ block.title }}
+                </div>
+                <p style="margin-top: 5px; margin-bottom: 5px;">“{{ block['text'] }}”</p>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+</body>
+</html>
